@@ -7,13 +7,13 @@ if ($db->connect_errno) {
     exit();
 }
 
-echo "Metai: " . $_GET["year"] . "<br>";
-echo "Mėnesis: " . $_GET["month"] . "<br>";
-echo "Karštas WC: " . $_GET["hot-wc"] . "<br>";
-echo "Šaltas WC: " . $_GET["cold-wc"] . "<br>";
-echo "Karštas Virt.: " . $_GET["hot-kitchen"] . "<br>";
-echo "Šaltas Virt.: " . $_GET["cold-kitchen"] . "<br>";
-echo "Elektra: " . $_GET["electricity"] . "<br>";
+echo "Metai: " . $_POST["year"] . "<br>";
+echo "Mėnesis: " . $_POST["month"] . "<br>";
+echo "Karštas WC: " . $_POST["hot-wc"] . "<br>";
+echo "Šaltas WC: " . $_POST["cold-wc"] . "<br>";
+echo "Karštas Virt.: " . $_POST["hot-kitchen"] . "<br>";
+echo "Šaltas Virt.: " . $_POST["cold-kitchen"] . "<br>";
+echo "Elektra: " . $_POST["electricity"] . "<br>";
 
 $sql = "SELECT * FROM counter_data ORDER BY f_id DESC LIMIT 1";
 $query = mysqli_query($db, $sql);

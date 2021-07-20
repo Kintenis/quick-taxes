@@ -18,7 +18,7 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-md-12">
-                <form method="get" action="taxes.php" id="form-date" class="date_form">
+                <form method="post" action="taxes.php" id="form-date" class="date_form">
                     <div class="form-row">
                         <div class="form-group col-md-2 offset-md-3">
                             <select id="year" class="form-control" name="year">
