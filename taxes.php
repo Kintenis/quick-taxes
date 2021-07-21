@@ -1,6 +1,6 @@
 <?php
-include_once 'config.php';
-include_once 'template.php';
+include_once '_includes/config.php';
+include_once '_includes/template.php';
 
 const ELECTRICITY_RATE = 0.127;
 const COLD_WATER_RATE = 1.72;

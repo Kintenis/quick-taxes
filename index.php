@@ -1,6 +1,6 @@
 <?php
-include_once 'config.php';
-include_once 'template.php';
+include_once '_includes/config.php';
+include_once '_includes/template.php';
 
 $sql = "SELECT * FROM counter_data ORDER BY f_id DESC LIMIT 1";
 $query = mysqli_query($db, $sql);
