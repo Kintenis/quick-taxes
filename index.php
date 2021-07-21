@@ -22,6 +22,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-2 offset-md-3">
                             <select id="year" class="form-control" name="year">
+                                <option>2020</option>
                                 <option selected>2021</option>
                                 <option>2022</option>
                                 <option>2023</option>
@@ -64,7 +65,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-fire" style="color: red;"></i></div>
                                         </div>
-                                        <input type="number" min="0" name="hot-wc" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
+                                        <input type="number" min="0" step="0.01" name="hot-wc" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -72,7 +73,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-snowflake" style="color: #03cafc;"></i></div>
                                         </div>
-                                        <input type="number" min="0" name="cold-wc" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
+                                        <input type="number" min="0" step="0.01" name="cold-wc" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +88,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-fire" style="color: red;"></i></div>
                                         </div>
-                                        <input type="number" min="0" name="hot-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
+                                        <input type="number" min="0" step="0.01" name="hot-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -95,7 +96,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-snowflake" style="color: #03cafc;"></i></div>
                                         </div>
-                                        <input type="number" min="0" name="cold-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
+                                        <input type="number" min="0" step="0.01" name="cold-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
                                     </div>
                                 </div>
                             </div>
@@ -110,6 +111,17 @@
                     <div class="col-md-4 offset-md-4">
                         <div class="form-group">
                             <input type="number" min="0" name="electricity" class="form-control" placeholder="Elektra" required>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="col-md-12" style="margin-top: 40px;">
+                        <i class="fa fa-envelope fa-4x" style="color: #333;"></i>
+                        <p class="utility">Mokesčiai</p>
+                    </div>
+                    <div class="col-md-4 offset-md-4">
+                        <div class="form-group">
+                            <input type="number" min="0" name="tax" step="0.01" class="form-control" placeholder="Mokesčiai" required>
                         </div>
                     </div>
                     <hr>
