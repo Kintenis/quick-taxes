@@ -1,18 +1,18 @@
-<!DOCTYPE HTML>
-<html>
+<?php
+include_once 'config.php';
+include_once 'template.php';
 
-<head>
-    <title>I. Kanto al. 21-6 taxes</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="style/style.css">
-    <meta charset="UTF-8">
-</head>
+$sql = "SELECT * FROM counter_data ORDER BY f_id DESC LIMIT 1";
+$query = mysqli_query($db, $sql);
+$data = mysqli_fetch_all($query);
+
+$dbHotWC = $data[0][3];
+$dbColdWC = $data[0][4];
+$dbHotKitchen = $data[0][5];
+$dbColdKitchen = $data[0][6];
+$dbElectricity = $data[0][7];
+
+?>
 
 <body>
     <div class="container">
@@ -65,7 +65,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-fire" style="color: red;"></i></div>
                                         </div>
-                                        <input type="number" min="0" step="0.01" name="hot-wc" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
+                                        <input type="number" min="<?php echo $dbHotWC ?>" step="0.01" name="hot-wc" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -73,7 +73,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-snowflake" style="color: #03cafc;"></i></div>
                                         </div>
-                                        <input type="number" min="0" step="0.01" name="cold-wc" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
+                                        <input type="number" min="<?php echo $dbColdWC ?>" step="0.01" name="cold-wc" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-fire" style="color: red;"></i></div>
                                         </div>
-                                        <input type="number" min="0" step="0.01" name="hot-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
+                                        <input type="number" min="<?php echo $dbHotKitchen ?>" step="0.01" name="hot-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Karštas" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -96,7 +96,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-snowflake" style="color: #03cafc;"></i></div>
                                         </div>
-                                        <input type="number" min="0" step="0.01" name="cold-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
+                                        <input type="number" min="<?php echo $dbColdKitchen ?>" step="0.01" name="cold-kitchen" class="form-control" id="inlineFormInputGroup" placeholder="Šaltas" required>
                                     </div>
                                 </div>
                             </div>
@@ -110,20 +110,40 @@
                     </div>
                     <div class="col-md-4 offset-md-4">
                         <div class="form-group">
-                            <input type="number" min="0" name="electricity" class="form-control" placeholder="Elektra" required>
+                            <input type="number" min="<?php echo $dbElectricity ?>" name="electricity" class="form-control" placeholder="Elektra" required>
                         </div>
                     </div>
                     <hr>
 
-                    <div class="col-md-12" style="margin-top: 40px;">
-                        <i class="fa fa-envelope fa-4x" style="color: #333;"></i>
-                        <p class="utility">Mokesčiai</p>
-                    </div>
-                    <div class="col-md-4 offset-md-4">
-                        <div class="form-group">
-                            <input type="number" min="0" name="tax" step="0.01" class="form-control" placeholder="Mokesčiai" required>
+                    <div class="form-row align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group mb-2">
+                                <div class="col-md-12" style="margin-top: 40px;">
+                                    <i class="fa fa-envelope fa-4x" style="color: #333;"></i>
+                                    <p class="utility">Mokesčiai</p>
+                                </div>
+                                <div class="col-md-4 offset-md-4">
+                                    <div class="form-group">
+                                        <input type="number" min="0" name="tax" step="0.01" class="form-control" placeholder="Mokesčiai" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-2">
+                                <div class="col-md-12" style="margin-top: 40px;">
+                                    <i class="fa fa-minus fa-4x" style="color: #333;"></i>
+                                    <p class="utility">Kaupiamasis fondas</p>
+                                </div>
+                                <div class="col-md-4 offset-md-4">
+                                    <div class="form-group">
+                                        <input type="number" min="0" name="fund" step="0.01" class="form-control" placeholder="Kaupiamasis fondas" required>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
                     <hr>
 
                     <button type="submit" class="btn btn-primary">Patvirtinti</button>
