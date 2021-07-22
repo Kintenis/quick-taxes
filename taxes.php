@@ -115,7 +115,7 @@ $taxTotalExcl = round($formTax + $taxElectricity + $taxCold + RENT - ACCUMULATIV
                         </tr>
                         <tr>
                             <td>Kaupiamasis fondas</td>
-                            <td>**.**</td>
+                            <td><b><?php echo $formFund; ?></b></td>
                         </tr>
                         <tr>
                             <td></td>
