@@ -45,6 +45,7 @@ $dbElectricity = $data[0][7];
                                 <option>Lapkritis</option>
                                 <option>Gruodis</option>
                             </select>
+
                         </div>
                     </div>
                     <hr>
@@ -143,7 +144,7 @@ $dbElectricity = $data[0][7];
                             </div>
                         </div>
                     </div>
-                    
+
                     <hr>
 
                     <button type="submit" class="btn btn-primary">Patvirtinti</button>
