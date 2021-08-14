@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}I. Kanto al. 21-6{% endblock %}
+
+{% block body %}
+    <h1>FORM DATA</h1>
+        {% for item in formData %}
+        {{ item }}
+        {% endfor %}
+    <hr>
+
+    <h1>DB DATA</h1>
+    {% for item in dbData %}
+        {{ item }}
+    {% endfor %}
+    <hr>
+{% endblock %}

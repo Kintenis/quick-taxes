@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Tax;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -151,12 +150,5 @@ class TaxType extends AbstractType
                 'label' => 'Patvirtinti',
             ))
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Tax::class,
-        ]);
     }
 }
