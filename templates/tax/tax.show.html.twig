@@ -180,14 +180,16 @@
                         Duomenų siuntimas į duomenų bazę
                     </h1>
 
-                    <p>F_YEAR: <b>{{ taxes.formYear }}</b></p>
-                    <p>F_MONTH: <b>{{ taxes.formMonth }}</b></p>
-                    <p>F_HOT_WC: <b>{{ taxes.formHotWc }}</b></p>
-                    <p>F_COLD_WC: <b>{{ taxes.formColdWc }}</b></p>
-                    <p>F_HOT_KITCHEN: <b>{{ taxes.formHotKitchen }}</b></p>
-                    <p>F_COLD_KITCHEN: <b>{{ taxes.formColdKitchen }}</b></p>
-                    <p>F_ELECTRIC: <b>{{ taxes.formElectricity }}</b></p>
-                    <p>F_TAX: <b>{{ taxes.formTax }}</b></p>
+
+                    <p>F_YEAR: <b>{{ dbSend.year }}</b></p>
+                    <p>F_MONTH: <b>{{ dbSend.month }}</b></p>
+                    <p>F_HOT_WC: <b>{{ dbSend.hotWc }}</b></p>
+                    <p>F_HOT_KITCHEN: <b>{{ dbSend.hotKitchen }}</b></p>
+                    <p>F_COLD_WC: <b>{{ dbSend.coldWc }}</b></p>
+                    <p>F_COLD_KITCHEN: <b>{{ dbSend.coldKitchen }}</b></p>
+                    <p>F_ELECTRIC: <b>{{ dbSend.electricity }}</b></p>
+                    <p>F_TAX: <b>{{ dbSend.tax }}</b></p>
+                    <p>F_FUND: <b>{{ dbSend.fund }}</b></p>
 
                     <button type="button" class="btn btn-primary">
                         Siųsti

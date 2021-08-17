@@ -20,23 +20,21 @@ class TaxController extends AbstractController
      * @Route("/tax", name="tax")
      */
 
-    public function show(TaxRepository $taxRepository ,Request $request): Response
+    public function show(TaxRepository $taxRepository, Request $request): Response
     {
         $form = $this->createForm(TaxType::class)->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $formYear = $form->getData()['year'];
-            $formMonth = $form->getData()['month'];
-
             $formData = $form->getData();
 
-            $dbData = (array)$taxRepository->findOneBy(['year' => $formYear, 'month' => $formMonth]);
+            $dbData = (array)$taxRepository->findOneBy(['year' => $formData['year'], 'month' => $formData['month']]);
             $dbData = $this->formatDbArray($dbData);
 
             $taxes = ($this->calculate($formData, $dbData));
-            dump($taxes);
+
             return $this->render('tax/tax.show.html.twig', [
                 'taxes' => $taxes,
+                'dbSend' => $this->checkDataBeforeFlushing($formData),
             ]);
         }
 
@@ -83,8 +81,6 @@ class TaxController extends AbstractController
         $taxTotal = round( ($taxFundExcl) + $taxElectricity + ($taxColdTotal) + self::RENT, 2 );
 
         return array(
-            'formYear' => $formData['year'],
-            'formMonth' => $formData['month'],
             'dbHotWc' => $dbData['hotWc'],
             'formHotWc' => $formData['hotWc'],
             'differenceHotWc' => $differenceHotWC,
@@ -110,5 +106,42 @@ class TaxController extends AbstractController
             'coldWaterRate' => self::COLD_WATER_RATE,
             'totalTax' => $taxTotal,
         );
+    }
+
+    private function checkDataBeforeFlushing(array $formData)
+    {
+        $year = $formData['year'];
+        $month = $formData['month'];
+
+        // Formatting the date.
+        if ($month + 1 > 12) {
+            $year++;
+            $month = 1;
+        } else {
+            $month++;
+        }
+
+        // Checking if the date is unique
+        $check = $this->getDoctrine()
+            ->getRepository('App:Tax')
+            ->findOneBy(array('year' => $year, 'month' => $month));
+
+        if($check === null) {
+            $output = array(
+                'year' => $year,
+                'month' => $month,
+                'hotWc' => $formData['hotWc'],
+                'hotKitchen' => $formData['hotKitchen'],
+                'coldWc' => $formData['coldWc'],
+                'coldKitchen' => $formData['coldKitchen'],
+                'electricity' => $formData['electric'],
+                'tax' => $formData['tax'],
+                'fund' => $formData['fund'],
+            );
+        } else {
+            $output = false;
+        }
+
+        return $output;
     }
 }
