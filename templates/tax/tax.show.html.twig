@@ -3,15 +3,220 @@
 {% block title %}I. Kanto al. 21-6{% endblock %}
 
 {% block body %}
-    <h1>FORM DATA</h1>
-        {% for item in formData %}
-        {{ item }}
-        {% endfor %}
-    <hr>
 
-    <h1>DB DATA</h1>
-    {% for item in dbData %}
-        {{ item }}
-    {% endfor %}
-    <hr>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="
+						col-sm-12 col-sm-12 col-md-12 col-lg-4 col-xl-4
+						offset-lg-1 offset-xl-1
+					">
+                <div class="hot-report-box text-center">
+                    <h2 class="hot-report-box-title" style="margin-top: 50px">
+                        6 butas
+                    </h2>
+                    <h2 class="hot-report-box-title">Karðtas</h2>
+                    <p style="margin-top: 50px; font-size: 26px">
+                        WC: {{ taxes.formHotWc }} - {{ taxes.dbHotWc }} = {{ taxes.differenceHotWc }}
+                    </p>
+                    <p style="font-size: 26px">
+                        Virt.: {{ taxes.formHotKitchen }} - {{ taxes.dbHotKitchen }} = {{ taxes.differenceHotKitchen }}
+                    </p>
+                </div>
+            </div>
+            <div class="
+						col-sm-11 col-md-11 col-lg-5 col-xl-5
+						offset-lg-1 offset-xl-1
+					" style="
+						border: 2px solid #333;
+						margin-top: 100px;
+						padding: 0;
+					">
+                <div class="text-center">
+                    <h1 style="
+								letter-spacing: 10px;
+								font-size: 18px;
+								margin-top: 20px;
+							">
+                        MOKËJIMO PRANEÐIMAS
+                    </h1>
+
+                    <p class="report_title_box_text">
+                        Uþ 2021m. Birþelis mën.
+                    </p>
+                    <p class="report_title_box_text">
+                        Butas Nr. 6, plotas 49,51
+                    </p>
+                    <p class="report_title_box_text" style="margin-top: 20px">
+                        gavëjas: 344-oji daugiabuèio namo savininkø bendrija
+                    </p>
+                    <p class="report_title_box_text">
+                        sàskaita LT77 7300 0100 0244 8502, Swedbank, AB
+                    </p>
+                    <p class="report_title_box_text">ám. kodas 125112428</p>
+                </div>
+
+                <div class="report_table_row" style="margin-top: 50px">
+                    <span class="align_left">Ðildymas ir ðilumos pardavimo mokestis</span
+                    >
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">"Gyvatukas"</span>
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Nepaskirstyta ðilumos energija</span
+                    >
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Ðiltas vanduo</span>
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Laiptiniø apðvietimas</span>
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Banko paslaugos</span>
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Iðlaidos namo prieþiûrai</span>
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Kanalizacijos valymas</span>
+                    <span class="align_right">**.**</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+                    <span class="align_left">Kaupiamasis fondas</span>
+                    <span class="align_right" style="font-size: 20px">{{ taxes.formFund }}</span
+                    >
+                </div>
+                <div style="clear: both"></div>
+                <div class="report_table_row">
+						<span class="align_right"
+                        ><b>Ið viso:| </b>
+							<b style="padding: 20px; font-size: 20px"
+                            >{{ taxes.formTax }}</b
+                            ></span
+                        >
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            <div
+                    class="col-sm-1 col-md-1"
+                    style="border-top: 2px solid #333; margin-top: 341px"
+            >
+                <p class="totals">{{ taxes.taxWithoutFund }}</p>
+                <p class="totals">{{ taxes.taxTotalElectricity }}</p>
+                <p class="totals">{{ taxes.taxTotalCold }}</p>
+                <p class="totals" style="border-bottom: 1px solid #333">
+                    {{ taxes.rent }}
+                </p>
+                <p class="totals"><b>{{ taxes.totalTax }}</b></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 offset-lg-1 offset-xl-1"></div>
+
+            <div class="col-sm-11 col-md-11 col-lg-5 col-xl-5 offset-lg-1 offset-xl-1">
+                <div class="text-center" style="font-size: 22px; margin-top: 20px;">
+                    <p>Elektra: {{ taxes.formElectricity }} - {{ taxes.dbElectricity }} = {{ taxes.differenceElectricity }} * 0.127 =
+                        {{ taxes.taxTotalElectricity }}</p>
+                </div>
+
+                <div class="text-center" style="width: 50%; float: left; padding: 20px;">
+                    <p style="font-size: 22px;">Karðtas</p>
+                    <p style="font-size: 20px">
+                        WC: {{ taxes.formHotWc }} - {{ taxes.dbHotWc }} = {{ taxes.differenceHotWc }}
+                    </p>
+                    <p style="font-size: 20px">
+                        Virt.: {{ taxes.formHotKitchen }} - {{ taxes.dbHotKitchen }} = {{ taxes.differenceHotKitchen }}
+                    </p>
+                </div>
+
+                <div class="text-center" style="width: 50%; float: left; padding: 20px;">
+                    <p style="font-size: 22px;">Ðaltas</p>
+                    <p style="font-size: 20px">
+                        WC: {{ taxes.formColdWc }} - {{ taxes.dbColdWc }} = {{ taxes.differenceColdWc }}
+                    </p>
+                    <p style="font-size: 20px">
+                        Virt.: {{ taxes.formColdKitchen }} - {{ taxes.dbColdKitchen }} = {{ taxes.differenceColdKitchen }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form>
+            <div class="row">
+                <div class="col-md-6 text-center" style="margin-top: 50px">
+                    <h1
+                            style="
+								font-size: 20px;
+								border-bottom: 1px solid #333;
+								border-top: 1px solid #333;
+								padding-top: 10px;
+								padding-bottom: 10px;
+							"
+                    >
+                        Duomenø siuntimas á duomenø bazæ
+                    </h1>
+                    <p>F_YEAR: <b>{{ taxes.formYear }}</b></p>
+                    <p>F_MONTH: <b>{{ taxes.formMonth }}</b></p>
+                    <p>F_HOT_WC: <b>{{ taxes.formHotWc }}</b></p>
+                    <p>F_COLD_WC: <b>{{ taxes.formColdWc }}</b></p>
+                    <p>F_HOT_KITCHEN: <b>{{ taxes.formHotKitchen }}</b></p>
+                    <p>F_COLD_KITCHEN: <b>{{ taxes.formColdKitchen }}</b></p>
+                    <p>F_ELECTRIC: <b>{{ taxes.formElectricity }}</b></p>
+                    <p>F_TAX: <b>{{ taxes.formTax }}</b></p>
+
+                    <button type="button" class="btn btn-primary">
+                        Siøsti
+                    </button>
+                </div>
+                <div class="col-md-6 text-center" style="margin-top: 50px">
+                    <h1
+                            style="
+								font-size: 20px;
+								border-bottom: 1px solid #333;
+								border-top: 1px solid #333;
+								padding-top: 10px;
+								padding-bottom: 10px;
+								text-align: center;
+							"
+                    >
+                        Sàskaitos siuntimas el.paðtu
+                    </h1>
+
+                    <div class="form-check" style="margin-top: 20px">
+                        <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value=""
+                                id="checkbox"
+                        />
+                        <label class="form-check-label" for="checkbox">
+                            Atskaièiuoti komunalinius
+                        </label>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary">
+                        Siøsti
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
 {% endblock %}

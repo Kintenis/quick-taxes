@@ -12,6 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TaxController extends AbstractController
 {
+    const ELECTRICITY_RATE = 0.127;
+    const COLD_WATER_RATE = 1.72;
+    const RENT = 130;
+
     /**
      * @Route("/tax", name="tax")
      */
@@ -29,11 +33,10 @@ class TaxController extends AbstractController
             $dbData = (array)$taxRepository->findOneBy(['year' => $formYear, 'month' => $formMonth]);
             $dbData = $this->formatDbArray($dbData);
 
-            $this->calculate($formData, $dbData);
+            $taxes = ($this->calculate($formData, $dbData));
 
             return $this->render('tax/tax.show.html.twig', [
-                'formData' => $formData,
-                'dbData' => $dbData,
+                'taxes' => $taxes,
             ]);
         }
 
@@ -59,8 +62,52 @@ class TaxController extends AbstractController
         return $dbData;
     }
 
-    private function calculate(array $formData, array $dbData): void
+    private function calculate(array $formData, array $dbData): array
     {
-        dd($formData, $dbData);
+        $differenceElectricity = $formData['electric'] - $dbData['electric'];
+        $taxElectricity = round($differenceElectricity * self::ELECTRICITY_RATE, 2);
+
+        $differenceHotWC = round($formData['hotWc'] - $dbData['hotWc'], 2);
+        $differenceHotKitchen = round($formData['hotKitchen'] - $dbData['hotKitchen'], 2);
+
+        $differenceColdWC = round($formData['coldWc'] - $dbData['coldWc'], 2);
+        $differenceColdKitchen = round($formData['coldKitchen'] - $dbData['coldKitchen'], 2);
+        $totalDifferenceCold = $differenceColdWC + $differenceColdKitchen;
+
+        $taxCold = round($totalDifferenceCold * self::COLD_WATER_RATE, 2);
+        $taxFundExcl = round($formData['tax'] - $formData['fund'], 2);
+
+        $differenceColdTotal = $differenceColdWC + $differenceColdKitchen;
+        $taxColdTotal = round( ($differenceColdTotal) * self::COLD_WATER_RATE, 2);
+
+        $taxTotal = round( ($taxFundExcl) + $taxElectricity + ($taxColdTotal) + self::RENT, 2 );
+
+        return array(
+            'formYear' => $formData['year'],
+            'formMonth' => $formData['month'],
+            'dbHotWc' => $dbData['hotWc'],
+            'formHotWc' => $formData['hotWc'],
+            'differenceHotWc' => $differenceHotWC,
+            'dbHotKitchen' => $dbData['hotKitchen'],
+            'formHotKitchen' => $formData['hotKitchen'],
+            'differenceHotKitchen' => $differenceHotKitchen,
+            'dbColdWc' => $dbData['coldWc'],
+            'formColdWc' => $formData['coldWc'],
+            'differenceColdWc' => $differenceColdWC,
+            'dbColdKitchen' => $dbData['coldKitchen'],
+            'formColdKitchen' => $formData['coldKitchen'],
+            'differenceColdKitchen' => $differenceColdKitchen,
+            'dbElectricity' => $dbData['electric'],
+            'formElectricity' => $formData['electric'],
+            'differenceElectricity' => $differenceElectricity,
+            'taxTotalElectricity' => $taxElectricity,
+            'totalDifferenceCold' => $totalDifferenceCold,
+            'taxTotalCold' => $taxCold,
+            'formTax' => $formData['tax'],
+            'formFund' => $formData['fund'],
+            'taxWithoutFund' => $taxFundExcl,
+            'rent' => self::RENT,
+            'totalTax' => $taxTotal,
+        );
     }
 }
