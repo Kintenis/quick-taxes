@@ -34,7 +34,7 @@ class TaxController extends AbstractController
             $dbData = $this->formatDbArray($dbData);
 
             $taxes = ($this->calculate($formData, $dbData));
-
+            dump($taxes);
             return $this->render('tax/tax.show.html.twig', [
                 'taxes' => $taxes,
             ]);
@@ -107,6 +107,7 @@ class TaxController extends AbstractController
             'formFund' => $formData['fund'],
             'taxWithoutFund' => $taxFundExcl,
             'rent' => self::RENT,
+            'coldWaterRate' => self::COLD_WATER_RATE,
             'totalTax' => $taxTotal,
         );
     }
