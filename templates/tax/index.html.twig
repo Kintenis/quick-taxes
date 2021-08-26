@@ -7,7 +7,6 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-md-12">
-                <form method="post" action="" id="form-date" class="date_form">
                     {{ form_start(form) }}
                     <div class="form-row">
                         <div class="form-group col-md-2 offset-md-3">
@@ -123,8 +122,7 @@
                     <hr>
 
                     {{ form_widget(form.submit) }}
-                    {{ form_start(form) }}
-                </form>
+                    {{ form_end(form) }}
             </div>
         </div>
     </div>

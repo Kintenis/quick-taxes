@@ -6,6 +6,7 @@ use App\Entity\Tax;
 use App\Form\TaxType;
 use App\Repository\TaxRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,9 @@ class TaxController extends AbstractController
 
     public function show(TaxRepository $taxRepository, Request $request): Response
     {
-        $form = $this->createForm(TaxType::class)->handleRequest($request);
+        $form = $this->createForm(TaxType::class, null, [
+            'method' => 'POST',
+        ])->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $formData = $form->getData();
@@ -143,5 +146,71 @@ class TaxController extends AbstractController
         }
 
         return $output;
+    }
+
+    /**
+     * @Route ("/get-months", name="tax_get_months", methods={"GET"})
+     */
+    public function getMonths(Request $request, TaxRepository $taxRepository): JsonResponse
+    {
+        $year = $request->get('year');
+
+        $taxes = $taxRepository->findBy([
+            'year' => $year,
+        ]);
+
+        $months = [];
+
+        foreach ($taxes as $tax) {
+            $months[$tax->getMonth()] = $this->getMonthName($tax->getMonth());
+        }
+
+        return new JsonResponse($months);
+    }
+
+    private function getMonthName(int $month): string
+    {
+        $monthName = '';
+
+        switch ($month) {
+            case 1:
+                $monthName = 'Sausis';
+                break;
+            case 2:
+                $monthName = 'Vasaris';
+                break;
+            case 3:
+                $monthName = 'Kovas';
+                break;
+            case 4:
+                $monthName = 'Balandis';
+                break;
+            case 5:
+                $monthName = 'Gegužė';
+                break;
+            case 6:
+                $monthName = 'Birželis';
+                break;
+            case 7:
+                $monthName = 'Liepa';
+                break;
+            case 8:
+                $monthName = 'Rugpjūtis';
+                break;
+            case 9:
+                $monthName = 'Rugsėjis';
+                break;
+            case 10:
+                $monthName = 'Spalis';
+                break;
+            case 11:
+                $monthName = 'Lapkritis';
+                break;
+            case 12:
+                $monthName = 'Gruodis';
+                break;
+        }
+
+        return $monthName;
     }
 }
