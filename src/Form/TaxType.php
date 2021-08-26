@@ -17,6 +17,7 @@ class TaxType extends AbstractType
         $builder
             ->add('year', ChoiceType::class, array(
                 'choices'  => array(
+                    2019 => 2019,
                     2020 => 2020,
                     2021 => 2021,
                     2022 => 2022,
@@ -28,20 +29,6 @@ class TaxType extends AbstractType
             ))
 
             ->add('month', ChoiceType::class, array(
-                'choices'  => array(
-                    'Sausis' => 1,
-                    'Vasaris' => 2,
-                    'Kovas' => 3,
-                    'Balandis' => 4,
-                    'Gegužė' => 5,
-                    'Birželis' => 6,
-                    'Liepa' => 7,
-                    'Rugpjūtis' => 8,
-                    'Rugsėjis' => 9,
-                    'Spalis' => 10,
-                    'Lapkritis' => 11,
-                    'Gruodis' => 12,
-                ),
                 'attr' => array(
                     'class' => 'form-control',
                 ),
