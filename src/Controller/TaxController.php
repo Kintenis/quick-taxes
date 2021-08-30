@@ -30,8 +30,7 @@ class TaxController extends AbstractController
         if ($form->isSubmitted()) {
             $formData = $form->getData();
 
-            $dbData = (array)$taxRepository->findOneBy(['year' => $formData['year'], 'month' => $formData['month']]);
-            $dbData = $this->formatDbArray($dbData);
+            $dbData = $taxRepository->findOneBy(['year' => $formData['year'], 'month' => $formData['month']]);
 
             $taxes = ($this->calculate($formData, $dbData));
 
@@ -46,33 +45,16 @@ class TaxController extends AbstractController
         ]);
     }
 
-    private function formatDbArray(array $dbData): array
+    private function calculate(array $formData, $dbData): array
     {
-        unset($dbData["\x00App\Entity\Tax\x00id"], $dbData["\x00App\Entity\Tax\x00fund"]);
-
-        $dbData['year'] = $dbData["\x00App\Entity\Tax\x00year"];
-        $dbData['month'] = $dbData["\x00App\Entity\Tax\x00month"];
-        $dbData['hotWc'] = $dbData["\x00App\Entity\Tax\x00hotWc"];
-        $dbData['hotKitchen'] = $dbData["\x00App\Entity\Tax\x00hotKitchen"];
-        $dbData['coldWc'] = $dbData["\x00App\Entity\Tax\x00coldWc"];
-        $dbData['coldKitchen'] = $dbData["\x00App\Entity\Tax\x00coldKitchen"];
-        $dbData['electric'] = $dbData["\x00App\Entity\Tax\x00electric"];
-        $dbData['tax'] = $dbData["\x00App\Entity\Tax\x00tax"];
-        unset($dbData["\x00App\Entity\Tax\x00year"], $dbData["\x00App\Entity\Tax\x00month"], $dbData["\x00App\Entity\Tax\x00hotWc"], $dbData["\x00App\Entity\Tax\x00hotKitchen"], $dbData["\x00App\Entity\Tax\x00coldWc"], $dbData["\x00App\Entity\Tax\x00coldKitchen"], $dbData["\x00App\Entity\Tax\x00electric"], $dbData["\x00App\Entity\Tax\x00tax"]);
-
-        return $dbData;
-    }
-
-    private function calculate(array $formData, array $dbData): array
-    {
-        $differenceElectricity = $formData['electric'] - $dbData['electric'];
+        $differenceElectricity = $formData['electric'] - $dbData->getElectric();
         $taxElectricity = round($differenceElectricity * self::ELECTRICITY_RATE, 2);
 
-        $differenceHotWC = round($formData['hotWc'] - $dbData['hotWc'], 2);
-        $differenceHotKitchen = round($formData['hotKitchen'] - $dbData['hotKitchen'], 2);
+        $differenceHotWC = round($formData['hotWc'] - $dbData->getHotWc(), 2);
+        $differenceHotKitchen = round($formData['hotKitchen'] - $dbData->getHotKitchen(), 2);
 
-        $differenceColdWC = round($formData['coldWc'] - $dbData['coldWc'], 2);
-        $differenceColdKitchen = round($formData['coldKitchen'] - $dbData['coldKitchen'], 2);
+        $differenceColdWC = round($formData['coldWc'] - $dbData->getColdWc(), 2);
+        $differenceColdKitchen = round($formData['coldKitchen'] - $dbData->getColdKitchen(), 2);
         $totalDifferenceCold = $differenceColdWC + $differenceColdKitchen;
 
         $taxCold = round($totalDifferenceCold * self::COLD_WATER_RATE, 2);
@@ -84,19 +66,19 @@ class TaxController extends AbstractController
         $taxTotal = round( ($taxFundExcl) + $taxElectricity + ($taxColdTotal) + self::RENT, 2 );
 
         return array(
-            'dbHotWc' => $dbData['hotWc'],
+            'dbHotWc' => $dbData->getHotWc(),
             'formHotWc' => $formData['hotWc'],
             'differenceHotWc' => $differenceHotWC,
-            'dbHotKitchen' => $dbData['hotKitchen'],
+            'dbHotKitchen' => $dbData->getHotKitchen(),
             'formHotKitchen' => $formData['hotKitchen'],
             'differenceHotKitchen' => $differenceHotKitchen,
-            'dbColdWc' => $dbData['coldWc'],
+            'dbColdWc' => $dbData->getColdWc(),
             'formColdWc' => $formData['coldWc'],
             'differenceColdWc' => $differenceColdWC,
-            'dbColdKitchen' => $dbData['coldKitchen'],
+            'dbColdKitchen' => $dbData->getColdKitchen(),
             'formColdKitchen' => $formData['coldKitchen'],
             'differenceColdKitchen' => $differenceColdKitchen,
-            'dbElectricity' => $dbData['electric'],
+            'dbElectricity' => $dbData->getElectric(),
             'formElectricity' => $formData['electric'],
             'differenceElectricity' => $differenceElectricity,
             'taxTotalElectricity' => $taxElectricity,
@@ -116,7 +98,7 @@ class TaxController extends AbstractController
         $year = $formData['year'];
         $month = $formData['month'];
 
-        // Formatting the date.
+        // Formatting the date, so it would not go past 12.
         if ($month + 1 > 12) {
             $year++;
             $month = 1;

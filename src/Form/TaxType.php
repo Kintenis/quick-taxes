@@ -20,7 +20,6 @@ class TaxType extends AbstractType
                     2019 => 2019,
                     2020 => 2020,
                     2021 => 2021,
-                    2022 => 2022,
                 ),
                 'attr' => array(
                     'class' => 'form-control',
@@ -29,6 +28,20 @@ class TaxType extends AbstractType
             ))
 
             ->add('month', ChoiceType::class, array(
+                'choices'  => array(
+                    'Sausis' => 1,
+                    'Vasaris' => 2,
+                    'Kovas' => 3,
+                    'Balandis' => 4,
+                    'Gegužė' => 5,
+                    'Birželis' => 6,
+                    'Liepa' => 7,
+                    'Rugpjūtis' => 8,
+                    'Rugsėjis' => 9,
+                    'Spalis' => 10,
+                    'Lapkritis' => 11,
+                    'Gruodis' => 12,
+                ),
                 'attr' => array(
                     'class' => 'form-control',
                 ),
@@ -96,7 +109,7 @@ class TaxType extends AbstractType
                     'class' => 'form-control',
                     'placeholder' => 'Elektra',
                     'min' => 1000,
-                    'max' => 100000,
+                    'max' => 10000000,
                 ),
                 'label' => false,
                 'required' => true,
