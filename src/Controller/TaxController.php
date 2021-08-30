@@ -141,7 +141,7 @@ class TaxController extends AbstractController
             'year' => $year,
         ]);
 
-        $months = [];
+        $months = array();
 
         foreach ($taxes as $tax) {
             $months[$tax->getMonth()] = $this->getMonthName($tax->getMonth());
@@ -194,5 +194,29 @@ class TaxController extends AbstractController
         }
 
         return $monthName;
+    }
+
+    /**
+     * @Route ("/set-min-values", name="tax_set_min_values", methods={"GET"})
+     */
+    public function setMinFormValues(Request $request, TaxRepository $taxRepository): JsonResponse
+    {
+        $year = $request->get('year');
+        $month = $request->get('month');
+
+        $tax = $taxRepository->findOneBy([
+            'year' => $year,
+            'month' => $month
+        ]);
+
+        $output = array(
+            'hotWc' => $tax->getHotWc(),
+            'coldWc' => $tax->getColdWc(),
+            'hotKitchen' => $tax->getHotKitchen(),
+            'coldKitchen' => $tax->getColdKitchen(),
+            'electricity' => $tax->getElectric()
+        );
+
+        return new JsonResponse($output);
     }
 }
