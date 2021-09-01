@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Tax;
 use App\Form\TaxType;
 use App\Repository\TaxRepository;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,29 +22,35 @@ class TaxController extends AbstractController
      * @Route("/tax", name="tax")
      */
 
-    public function show(TaxRepository $taxRepository, Request $request): Response
+    public function index(Request $request): Response
     {
         $form = $this->createForm(TaxType::class, null, [
             'method' => 'POST',
+            'action' => $this->generateUrl('tax-show'),
         ])->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $formData = $form->getData();
-
-            $dbData = $taxRepository->findOneBy(['year' => $formData['year'], 'month' => $formData['month']]);
-
-            $taxes = ($this->calculate($formData, $dbData));
-
-            return $this->render('tax/tax.show.html.twig', [
-                'taxes' => $taxes,
-                'dbSend' => $this->checkDataBeforeFlushing($formData),
-            ]);
-        }
 
         return $this->render('tax/index.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/tax-show", name="tax-show")
+     */
+    public function show(TaxRepository $taxRepository, Request $request): Response
+    {
+        $formData = $request->request->all()['tax'];
+
+        $dbData = $taxRepository->findOneBy(['year' => $formData['year'], 'month' => $formData['month']]);
+
+        $taxes = ($this->calculate($formData, $dbData));
+
+        return $this->render('tax/tax.show.html.twig', [
+            'taxes' => $taxes,
+            'dbSend' => $this->checkDataBeforeFlushing($formData),
+        ]);
+    }
+
 
     private function calculate(array $formData, $dbData): array
     {
