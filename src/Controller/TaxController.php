@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Tax;
 use App\Form\TaxType;
 use App\Repository\TaxRepository;
-use Psr\Container\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TaxController extends AbstractController
 {
-    const ELECTRICITY_RATE = 0.127;
-    const COLD_WATER_RATE = 1.72;
-    const RENT = 130;
+    public const ELECTRICITY_RATE = 0.127;
+    public const COLD_WATER_RATE = 1.72;
+    public const RENT = 130;
 
     /**
-     * @Route("/tax", name="tax")
+     * @Route("/", name="tax")
      */
 
     public function index(Request $request): Response
@@ -44,6 +44,8 @@ class TaxController extends AbstractController
         $dbData = $taxRepository->findOneBy(['year' => $formData['year'], 'month' => $formData['month']]);
 
         $taxes = ($this->calculate($formData, $dbData));
+
+        dump($formData);
 
         return $this->render('tax/tax.show.html.twig', [
             'taxes' => $taxes,
@@ -138,6 +140,30 @@ class TaxController extends AbstractController
     }
 
     /**
+     * @Route ("/send-to-db", name="tax_send_to_db", methods={"GET"})
+     */
+    public function sendToDb(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $formData = $request->get('dbSend');
+
+        $tax = new Tax();
+        $tax->setYear($formData['year']);
+        $tax->setMonth($formData['month']);
+        $tax->setHotWc($formData['hotWC']);
+        $tax->setHotKitchen($formData['hotKitchen']);
+        $tax->setColdWc($formData['coldWC']);
+        $tax->setColdKitchen($formData['coldKitchen']);
+        $tax->setElectric($formData['electricity']);
+        $tax->setTax($formData['tax']);
+        $tax->setFund($formData['fund']);
+
+        $entityManager->persist($tax);
+        $entityManager->flush();
+
+        return new JsonResponse($formData);
+    }
+
+    /**
      * @Route ("/get-months", name="tax_get_months", methods={"GET"})
      */
     public function getMonths(Request $request, TaxRepository $taxRepository): JsonResponse
@@ -206,7 +232,7 @@ class TaxController extends AbstractController
     /**
      * @Route ("/set-min-values", name="tax_set_min_values", methods={"GET"})
      */
-    public function setMinFormValues(Request $request, TaxRepository $taxRepository): JsonResponse
+    public function setMinValues(Request $request, TaxRepository $taxRepository): JsonResponse
     {
         $year = $request->get('year');
         $month = $request->get('month');

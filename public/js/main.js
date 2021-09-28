@@ -55,6 +55,33 @@ $( document ).ready(function() {
             fieldElectricity.attr('min', data.responseJSON['electricity']);
         }
     })
+
+    $('#send-to-db').on( "click", function() {
+        $.ajax({
+            method: 'GET',
+            url: '/send-to-db',
+            data: {
+                dbSend: {
+                    year: $('#db-send-year').text().split(': ').pop(),
+                    month: $('#db-send-month').text().split(': ').pop(),
+                    hotWC: $('#db-send-hotWC').text().split(': ').pop(),
+                    hotKitchen: $('#db-send-hotKitchen').text().split(': ').pop(),
+                    coldWC: $('#db-send-coldWC').text().split(': ').pop(),
+                    coldKitchen: $('#db-send-coldKitchen').text().split(': ').pop(),
+                    electricity: $('#db-send-electricity').text().split(': ').pop(),
+                    tax: $('#db-send-tax').text().split(': ').pop(),
+                    fund: $('#db-send-fund').text().split(': ').pop(),
+                }
+            },
+            complete: function(data) {
+                console.log(data.responseJSON);
+            }
+        })
+
+        $('#send-to-db').prop('disabled', true);
+        $('#isSent').text('Išsiųsta!');
+        $('#isSent').css('color', 'green');
+    });
 });
 
 $(function () {
@@ -97,9 +124,7 @@ $(function () {
             }
         })
     });
-});
 
-$(function () {
     $('#tax_month').change(function () {
         $.ajax({
             method: 'GET',
@@ -124,3 +149,25 @@ $(function () {
         })
     });
 });
+
+$(function () {
+    let taxPartiesCuts = $('#taxPartiesCuts');
+    let taxTotal = $('#taxTotal').text();
+    let taxParty1 = $('#taxParty1');
+    let taxParty2 = $('#taxParty2');
+
+    taxPartiesCuts.on('change', function() {
+        if(this.value === 'K') {
+            taxParty1.html('Kintenis: <b>' + taxTotal + '€</b>');
+            taxParty2.html('Titas: <b>' + '0' + '€</b>');
+        } else if (this.value === 'T') {
+            taxParty1.html('Kintenis: <b>' + '0' + '€</b>');
+            taxParty2.html('Titas: <b>' + taxTotal + '€</b>');
+        } else {
+            taxParty1.html('Kintenis: <b>' + String(taxTotal / 2) + '€</b>');
+            taxParty2.html('Titas: <b>' + String(taxTotal / 2) + '€</b>');
+        }
+    });
+});
+
+
