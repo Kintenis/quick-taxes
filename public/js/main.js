@@ -206,3 +206,15 @@ $(function () {
     });
 });
 
+function modalAutofillValues() {
+    $('#tax_year').val();
+    $('#tax_month').val();
+    $('#tax_hotWc').val($('#modalHotWC').text());
+    $('#tax_coldWc').val($('#modalColdWC').text());
+    $('#tax_hotKitchen').val($('#modalHotKitchen').text());
+    $('#tax_coldKitchen').val($('#modalColdKitchen').text());
+    $('#tax_electric').val($('#modalElectricity').text());
+    $('#tax_tax').val($('#modalTax').text());
+    $('#tax_fund').val($('#modalFund').text());
+}
+
