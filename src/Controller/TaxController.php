@@ -49,7 +49,7 @@ class TaxController extends AbstractController
 
         return $this->render('tax/tax.show.html.twig', [
             'taxes' => $taxes,
-            'dbSend' => $this->checkDataBeforeFlushing($formData),
+            'dbSend' => $this->checkIfRecordExists($formData),
         ]);
     }
 
@@ -102,7 +102,7 @@ class TaxController extends AbstractController
         );
     }
 
-    private function checkDataBeforeFlushing(array $formData)
+    private function checkIfRecordExists(array $formData)
     {
         $year = $formData['year'];
         $month = $formData['month'];
@@ -248,6 +248,32 @@ class TaxController extends AbstractController
             'hotKitchen' => $tax->getHotKitchen(),
             'coldKitchen' => $tax->getColdKitchen(),
             'electricity' => $tax->getElectric()
+        );
+
+        return new JsonResponse($output);
+    }
+
+    /**
+     * @Route ("/modal-get-counter-data", name="tax_modal_get_counter_data", methods={"GET"})
+     */
+    public function modalGetCounterData(Request $request, TaxRepository $taxRepository): JsonResponse
+    {
+        $year = $request->get('year');
+        $month = $request->get('month');
+
+        $tax = $taxRepository->findOneBy([
+            'year' => $year,
+            'month' => $month
+        ]);
+
+        $output = array(
+            'hotWc' => $tax->getHotWc(),
+            'coldWc' => $tax->getColdWc(),
+            'hotKitchen' => $tax->getHotKitchen(),
+            'coldKitchen' => $tax->getColdKitchen(),
+            'electricity' => $tax->getElectric(),
+            'tax' => $tax->getTax(),
+            'fund' => $tax->getFund()
         );
 
         return new JsonResponse($output);

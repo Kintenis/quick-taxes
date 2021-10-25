@@ -12,8 +12,8 @@ document.onreadystatechange = function () {
 }
 
 $( document ).ready(function() {
-    const thisYear = new Date().getFullYear();
-    const thisMonth = new Date().getMonth();
+    let thisYear = new Date().getFullYear();
+    let thisMonth = new Date().getMonth();
 
     $.ajax({
         method: 'GET',
@@ -31,6 +31,7 @@ $( document ).ready(function() {
 
             $("#tax_year").val(thisYear).attr('selected', 'selected');
             $("#tax_month").val(thisMonth - 1).attr('selected', 'selected');
+            $('#btnAutofill').html('Įkelti iš ' + $("#tax_year option:selected").text() + ' ' + $("#tax_month option:selected").text());
         }
     })
 
@@ -42,11 +43,11 @@ $( document ).ready(function() {
             year: thisYear
         },
         complete: function(data) {
-            const fieldHotWc = $('#tax_hotWc');
-            const fieldColdWc = $('#tax_coldWc');
-            const fieldHotKitchen = $('#tax_hotKitchen');
-            const fieldColdKitchen = $('#tax_coldKitchen');
-            const fieldElectricity = $('#tax_electric');
+            let fieldHotWc = $('#tax_hotWc');
+            let fieldColdWc = $('#tax_coldWc');
+            let fieldHotKitchen = $('#tax_hotKitchen');
+            let fieldColdKitchen = $('#tax_coldKitchen');
+            let fieldElectricity = $('#tax_electric');
 
             fieldHotWc.attr('min', data.responseJSON['hotWc']);
             fieldColdWc.attr('min', data.responseJSON['coldWc']);
@@ -99,6 +100,8 @@ $(function () {
                 $.each( months, function( index, value ){
                     $("#tax_month").append(new Option(value, index));
                 });
+
+                $('#btnAutofill').html('Įkelti iš ' + $("#tax_year option:selected").text() + ' ' + $("#tax_month option:selected").text());
             }
         })
 
@@ -110,11 +113,11 @@ $(function () {
                 year: $(this).val()
             },
             complete: function(data) {
-                const fieldHotWc = $('#tax_hotWc');
-                const fieldColdWc = $('#tax_coldWc');
-                const fieldHotKitchen = $('#tax_hotKitchen');
-                const fieldColdKitchen = $('#tax_coldKitchen');
-                const fieldElectricity = $('#tax_electric');
+                let fieldHotWc = $('#tax_hotWc');
+                let fieldColdWc = $('#tax_coldWc');
+                let fieldHotKitchen = $('#tax_hotKitchen');
+                let fieldColdKitchen = $('#tax_coldKitchen');
+                let fieldElectricity = $('#tax_electric');
 
                 fieldHotWc.attr('min', data.responseJSON['hotWc']);
                 fieldColdWc.attr('min', data.responseJSON['coldWc']);
@@ -134,17 +137,19 @@ $(function () {
                 year: $($('#tax_year :selected')).val()
             },
             complete: function(data) {
-                const fieldHotWc = $('#tax_hotWc');
-                const fieldColdWc = $('#tax_coldWc');
-                const fieldHotKitchen = $('#tax_hotKitchen');
-                const fieldColdKitchen = $('#tax_coldKitchen');
-                const fieldElectricity = $('#tax_electric');
+                let fieldHotWc = $('#tax_hotWc');
+                let fieldColdWc = $('#tax_coldWc');
+                let fieldHotKitchen = $('#tax_hotKitchen');
+                let fieldColdKitchen = $('#tax_coldKitchen');
+                let fieldElectricity = $('#tax_electric');
 
                 fieldHotWc.attr('min', data.responseJSON['hotWc']);
                 fieldColdWc.attr('min', data.responseJSON['coldWc']);
                 fieldHotKitchen.attr('min', data.responseJSON['hotKitchen']);
                 fieldColdKitchen.attr('min', data.responseJSON['coldKitchen']);
                 fieldElectricity.attr('min', data.responseJSON['electricity']);
+
+                $('#btnAutofill').html('Įkelti iš ' + $("#tax_year option:selected").text() + ' ' + $("#tax_month option:selected").text());
             }
         })
     });
@@ -174,4 +179,30 @@ $(function () {
     });
 });
 
+$(function () {
+    let selectBoxYear = $('#tax_year');
+    let selectBoxMonth = $('#tax_month');
+    let modalOpen = $('#btnShowCounterData');
+
+    modalOpen.on('click', function () {
+        $.ajax({
+            method: 'GET',
+            url: '/modal-get-counter-data',
+            data: {
+                year: selectBoxYear.val(),
+                month: selectBoxMonth.val()
+            },
+            complete: function(data) {
+                $('#counterDataModalLabel').html(selectBoxYear.val() + '-' + selectBoxMonth.val() + ' (' + $("#tax_month option:selected").text() + ')')
+                $('#modalHotWC').html(data.responseJSON['hotWc']);
+                $('#modalColdWC').html(data.responseJSON['coldWc']);
+                $('#modalHotKitchen').html(data.responseJSON['hotKitchen']);
+                $('#modalColdKitchen').html(data.responseJSON['coldKitchen']);
+                $('#modalElectricity').html(data.responseJSON['electricity']);
+                $('#modalTax').html(data.responseJSON['tax']);
+                $('#modalFund').html(data.responseJSON['fund'] !== null ? data.responseJSON['fund'] : '-');
+            }
+        })
+    });
+});
 
