@@ -152,17 +152,21 @@ $(function () {
 
 $(function () {
     let taxPartiesCuts = $('#taxPartiesCuts');
-    let taxTotal = $('#taxTotal').text();
     let taxParty1 = $('#taxParty1');
     let taxParty2 = $('#taxParty2');
+    let taxTotal = parseInt($('#taxTotal').text());
+
+    let taxElectricity = parseFloat($('#taxElectricity').text());
+    let taxColdTotal = parseFloat($('#taxColdTotal').text());
+    let taxExcludeTotal = taxElectricity + taxColdTotal;
 
     taxPartiesCuts.on('change', function() {
         if(this.value === 'K') {
-            taxParty1.html('Kintenis: <b>' + taxTotal + '€</b>');
-            taxParty2.html('Titas: <b>' + '0' + '€</b>');
+            taxParty1.html('Kintenis: <b>' + String((taxTotal / 2) + taxExcludeTotal) + '€</b>');
+            taxParty2.html('Titas: <b>' + String((taxTotal / 2) - taxExcludeTotal) + '€</b>');
         } else if (this.value === 'T') {
-            taxParty1.html('Kintenis: <b>' + '0' + '€</b>');
-            taxParty2.html('Titas: <b>' + taxTotal + '€</b>');
+            taxParty1.html('Kintenis: <b>' + String((taxTotal / 2) - taxExcludeTotal) + '€</b>');
+            taxParty2.html('Titas: <b>' + String((taxTotal / 2) + taxExcludeTotal) + '€</b>');
         } else {
             taxParty1.html('Kintenis: <b>' + String(taxTotal / 2) + '€</b>');
             taxParty2.html('Titas: <b>' + String(taxTotal / 2) + '€</b>');
