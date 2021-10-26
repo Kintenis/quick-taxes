@@ -31,9 +31,8 @@ $( document ).ready(function() {
 
             $("#tax_year").val(thisYear).attr('selected', 'selected');
             $("#tax_month").val(thisMonth - 1).attr('selected', 'selected');
-            $('#btnAutofill').html('Įkelti iš ' + $("#tax_year option:selected").text() + ' ' + $("#tax_month option:selected").text());
         }
-    })
+    });
 
     $.ajax({
         method: 'GET',
@@ -55,7 +54,7 @@ $( document ).ready(function() {
             fieldColdKitchen.attr('min', data.responseJSON['coldKitchen']);
             fieldElectricity.attr('min', data.responseJSON['electricity']);
         }
-    })
+    });
 
     $('#send-to-db').on( "click", function() {
         $.ajax({
@@ -75,13 +74,31 @@ $( document ).ready(function() {
                 }
             },
             complete: function(data) {
-                console.log(data.responseJSON);
+                $('#send-to-db').prop('disabled', true);
+                $('#isSent').text('Išsiųsta!');
+                $('#isSent').css('color', 'green');
             }
-        })
+        });
+    });
 
-        $('#send-to-db').prop('disabled', true);
-        $('#isSent').text('Išsiųsta!');
-        $('#isSent').css('color', 'green');
+    $.ajax({
+        method: 'GET',
+        url: '/set-values-for-autofill-btn',
+        data: {
+            year:  $('#tax_year').val(),
+            month:  $('#tax_month').val()
+        },
+        complete: function(data) {
+            if(data.responseJSON === false) {
+                $('#btnAutofill').attr('disabled', true);
+                $('#btnAutofill').html('Įrašas nerąstas!');
+                $('#btnAutofill').val('false');
+            } else {
+                $('#btnAutofill').attr('disabled', false);
+                $('#btnAutofill').html('Įkelti iš ' + data.responseJSON['year'] + ' ' + data.responseJSON['monthName']);
+                $('#btnAutofill').val(data.responseJSON['year'] + '-' + data.responseJSON['month']);
+            }
+        }
     });
 });
 
@@ -101,9 +118,9 @@ $(function () {
                     $("#tax_month").append(new Option(value, index));
                 });
 
-                $('#btnAutofill').html('Įkelti iš ' + $("#tax_year option:selected").text() + ' ' + $("#tax_month option:selected").text());
+                $("#tax_month option:first").attr('selected','selected');
             }
-        })
+        });
 
         $.ajax({
             method: 'GET',
@@ -125,7 +142,27 @@ $(function () {
                 fieldColdKitchen.attr('min', data.responseJSON['coldKitchen']);
                 fieldElectricity.attr('min', data.responseJSON['electricity']);
             }
-        })
+        });
+
+        $.ajax({
+            method: 'GET',
+            url: '/set-values-for-autofill-btn',
+            data: {
+                year:  $('#tax_year').val(),
+                month:  $('#tax_month').val()
+            },
+            complete: function(data) {
+                if(data.responseJSON === false) {
+                    $('#btnAutofill').attr('disabled', true);
+                    $('#btnAutofill').html('Įrašas nerąstas!');
+                    $('#btnAutofill').val('false');
+                } else {
+                    $('#btnAutofill').attr('disabled', false);
+                    $('#btnAutofill').html('Įkelti iš ' + data.responseJSON['year'] + ' ' + data.responseJSON['monthName']);
+                    $('#btnAutofill').val(data.responseJSON['year'] + '-' + data.responseJSON['month']);
+                }
+            }
+        });
     });
 
     $('#tax_month').change(function () {
@@ -134,7 +171,7 @@ $(function () {
             url: '/set-min-values',
             data: {
                 month: $(this).val(),
-                year: $($('#tax_year :selected')).val()
+                year: $($('#tax_year')).val()
             },
             complete: function(data) {
                 let fieldHotWc = $('#tax_hotWc');
@@ -148,10 +185,28 @@ $(function () {
                 fieldHotKitchen.attr('min', data.responseJSON['hotKitchen']);
                 fieldColdKitchen.attr('min', data.responseJSON['coldKitchen']);
                 fieldElectricity.attr('min', data.responseJSON['electricity']);
-
-                $('#btnAutofill').html('Įkelti iš ' + $("#tax_year option:selected").text() + ' ' + $("#tax_month option:selected").text());
             }
-        })
+        });
+
+        $.ajax({
+            method: 'GET',
+            url: '/set-values-for-autofill-btn',
+            data: {
+                year:  $('#tax_year').val(),
+                month:  $('#tax_month').val()
+            },
+            complete: function(data) {
+                if(data.responseJSON === false) {
+                    $('#btnAutofill').attr('disabled', true);
+                    $('#btnAutofill').html('Įrašas nerąstas!');
+                    $('#btnAutofill').val('false');
+                } else {
+                    $('#btnAutofill').attr('disabled', false);
+                    $('#btnAutofill').html('Įkelti iš ' + data.responseJSON['year'] + ' ' + data.responseJSON['monthName']);
+                    $('#btnAutofill').val(data.responseJSON['year'] + '-' + data.responseJSON['month']);
+                }
+            }
+        });
     });
 });
 
@@ -202,7 +257,34 @@ $(function () {
                 $('#modalTax').html(data.responseJSON['tax']);
                 $('#modalFund').html(data.responseJSON['fund'] !== null ? data.responseJSON['fund'] : '-');
             }
-        })
+        });
+    });
+});
+
+$(function () {
+    let btnAutofill = $('#btnAutofill');
+
+    btnAutofill.on('click', function () {
+        let btnYear = $('#btnAutofill').val().split('-')[0];
+        let btnMonth = $('#btnAutofill').val().split('-')[1];
+
+        $.ajax({
+            method: 'GET',
+            url: '/autofill-values',
+            data: {
+                year: btnYear,
+                month: btnMonth
+            },
+            complete: function(data) {
+                $('#tax_hotWc').val(data.responseJSON['hotWc']);
+                $('#tax_coldWc').val(data.responseJSON['coldWc']);
+                $('#tax_hotKitchen').val(data.responseJSON['hotKitchen']);
+                $('#tax_coldKitchen').val(data.responseJSON['coldKitchen']);
+                $('#tax_electric').val(data.responseJSON['electricity']);
+                $('#tax_tax').val(data.responseJSON['tax']);
+                $('#tax_fund').val(data.responseJSON['fund'] !== null ? data.responseJSON['fund'] : 0);
+            }
+        });
     });
 });
 
@@ -215,6 +297,6 @@ function modalAutofillValues() {
     $('#tax_coldKitchen').val($('#modalColdKitchen').text());
     $('#tax_electric').val($('#modalElectricity').text());
     $('#tax_tax').val($('#modalTax').text());
-    $('#tax_fund').val($('#modalFund').text());
+    $('#tax_fund').val($('#modalFund').text() !== '-' ? $('#modalFund').text() : 0);
 }
 

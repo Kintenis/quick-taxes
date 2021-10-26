@@ -278,4 +278,63 @@ class TaxController extends AbstractController
 
         return new JsonResponse($output);
     }
+
+    /**
+     * @Route ("/set-values-for-autofill-btn", name="tax_set_values_for_autofill_btn", methods={"GET"})
+     */
+    public function setValuesForAutofillBtn(Request $request, TaxRepository $taxRepository): JsonResponse
+    {
+        $year = $request->get('year');
+        $month = $request->get('month');
+
+        if ($month + 1 > 12) {
+            $year++;
+            $month = 1;
+        } else {
+            $month++;
+        }
+
+        $tax = $taxRepository->findOneBy([
+            'year' => $year,
+            'month' => $month
+        ]);
+
+        if($tax !== null) {
+            $output = array(
+                'year' => $year,
+                'month' => $month,
+                'monthName' => $this->getMonthName($month)
+            );
+        } else {
+            $output = false;
+        }
+
+        return new JsonResponse($output);
+    }
+
+    /**
+     * @Route ("/autofill-values", name="tax_autofill_values", methods={"GET"})
+     */
+    public function autofillValues(Request $request, TaxRepository $taxRepository): JsonResponse
+    {
+        $year = $request->get('year');
+        $month = $request->get('month');
+
+        $tax = $taxRepository->findOneBy([
+            'year' => $year,
+            'month' => $month
+        ]);
+
+        $output = array(
+            'hotWc' => $tax->getHotWc(),
+            'coldWc' => $tax->getColdWc(),
+            'hotKitchen' => $tax->getHotKitchen(),
+            'coldKitchen' => $tax->getColdKitchen(),
+            'electricity' => $tax->getElectric(),
+            'tax' => $tax->getTax(),
+            'fund' => $tax->getFund()
+        );
+
+        return new JsonResponse($output);
+    }
 }
