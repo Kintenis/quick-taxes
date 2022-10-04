@@ -14,9 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TaxController extends AbstractController
 {
-    public const ELECTRICITY_RATE = 0.127;
-    public const COLD_WATER_RATE = 1.72;
+    public const ELECTRICITY_RATE = 0.24;
+    public const COLD_WATER_RATE = 1.45;
     public const RENT = 130;
+    public const COLD_WATER_SUBSCRIPTION = 0.79;
 
     /**
      * @Route("/", name="tax")
@@ -66,11 +67,11 @@ class TaxController extends AbstractController
         $differenceColdKitchen = round($formData['coldKitchen'] - $dbData->getColdKitchen(), 2);
         $totalDifferenceCold = $differenceColdWC + $differenceColdKitchen;
 
-        $taxCold = round($totalDifferenceCold * self::COLD_WATER_RATE, 2);
+        $taxCold = round($totalDifferenceCold * self::COLD_WATER_RATE + self::COLD_WATER_SUBSCRIPTION, 2);
         $taxFundExcl = round($formData['tax'] - $formData['fund'], 2);
 
         $differenceColdTotal = $differenceColdWC + $differenceColdKitchen;
-        $taxColdTotal = round( ($differenceColdTotal) * self::COLD_WATER_RATE, 2);
+        $taxColdTotal = round( ($differenceColdTotal) * self::COLD_WATER_RATE + self::COLD_WATER_SUBSCRIPTION, 2);
 
         $taxTotal = round( ($taxFundExcl) + $taxElectricity + ($taxColdTotal) + self::RENT, 2 );
 

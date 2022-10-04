@@ -130,7 +130,7 @@
             <div class="col-lg-6 col-xl-6 offset-lg-6 offset-xl-6">
 
                 <div class="text-center" style="font-size: 20px; margin-top: 20px;">
-                    <p>Elektra: {{ taxes.formElectricity }} - {{ taxes.dbElectricity }} = {{ taxes.differenceElectricity }} * 0.127 =
+                    <p>Elektra: {{ taxes.formElectricity }} - {{ taxes.dbElectricity }} = {{ taxes.differenceElectricity }} * 0.24 =
                         {{ taxes.taxTotalElectricity }}</p>
                 </div>
 
@@ -158,7 +158,7 @@
 
                 <div style="width: 30%; float: left; height: 75px;">
                     <div style="height: 100%; border-left: 2px solid #333333; font-size: 18px">
-                        <p style="padding: 20px; margin-top: 45px;">{{ taxes.totalDifferenceCold }} * {{ taxes.coldWaterRate }} = {{ taxes.taxTotalCold }}</p>
+                        <p style="padding: 20px; margin-top: 45px;">{{ taxes.totalDifferenceCold }} * {{ taxes.coldWaterRate }} = {{ taxes.taxTotalCold - 0.79 }} + 0.79 = {{ taxes.taxTotalCold }}</p>
                     </div>
                 </div>
             </div>

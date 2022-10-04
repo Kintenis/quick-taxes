@@ -25,6 +25,7 @@ class TaxType extends AbstractType
                     2019 => 2019,
                     2020 => 2020,
                     2021 => 2021,
+                    2022 => 2022,
                 ),
                 'attr' => array(
                     'class' => 'form-control',
